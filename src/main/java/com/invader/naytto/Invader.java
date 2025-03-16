@@ -5,7 +5,7 @@ import javafx.scene.shape.Polygon;
 
 public class Invader extends Polygon {
     // hajautin osat eri luokkiin, joten tiedä tästä
-    double size = 1;
+    double size;
     double xcord;
     double ycord;
     private double x1;
@@ -17,18 +17,19 @@ public class Invader extends Polygon {
     private double y3;
     Color color = Color.RED;
 
-    public Invader make(double xcord, double ycord){
-        Invader invader = (Invader) new Polygon();
-        invader.setCoordinates(xcord,ycord);
-        invader.getPoints().setAll(x1,y1,x2,y2,x3,y3);
-        invader.setFill(color);
-        invader.setStroke(Color.BLACK);
-        return invader;
+    public Invader(double xcord, double ycord){
+        this.setCoordinates(xcord,ycord);
+        this.getPoints().setAll(x1,y1,x2,y2,x3,y3);
+        this.setFill(color);
+        this.setStroke(Color.BLACK);
     }
 
-    public void setCoordinates(double xcord, double ycord){
+    public void setCoordinates(double xcord, double ycord) {
         this.ycord = ycord;
         this.xcord = xcord;
+        this.update();
+    }
+    public void update(){
         double xcos = size * Math.cos(Math.PI / 3);
         double ysin = size * Math.sin(Math.PI / 3);
 
@@ -37,8 +38,10 @@ public class Invader extends Polygon {
         x3 = xcord + xcos;
 
         y1 = ycord - ysin;
-        y2 = ycord + size;
+        y2 = ycord;
         y3 = y1;
+
+        this.getPoints().setAll(x1,y1,x2,y2,x3,y3);
     }
 
     public double getYcord() {
@@ -59,6 +62,7 @@ public class Invader extends Polygon {
 
     public void setXcord(double xcord) {
         this.xcord = xcord;
+        update();
     }
 
     public double getSize() {
@@ -67,5 +71,6 @@ public class Invader extends Polygon {
 
     public void setSize(double size) {
         this.size = size;
+        update();
     }
 }

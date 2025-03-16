@@ -7,12 +7,12 @@ public class Defender extends Circle {
     double size = 1;
     Color color = Color.GREEN;
 
-    public Defender make(double xcord, double ycord){
-        Defender defender = (Defender) new Circle(xcord, ycord, size);
+    public Defender(double xcord, double ycord){
+        Circle defender = new Circle(xcord, ycord, size);
+        Defender defender1 = (Defender) defender;
         defender.setFill(color);
         defender.setStrokeWidth(3*size);
         defender.setStroke(Color.BLACK);
-        return defender;
     }
 
     public double[] getCoordinates(){
