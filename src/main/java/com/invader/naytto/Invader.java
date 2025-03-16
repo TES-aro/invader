@@ -1,9 +1,10 @@
-package com.viikko7.naytto;
+package com.invader.naytto;
 
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 
 public class Invader extends Polygon {
+    // hajautin osat eri luokkiin, joten tiedä tästä
     double size = 1;
     double xcord;
     double ycord;

@@ -1,8 +1,8 @@
-module com.viikko7.naytto {
+module com.invader.naytto {
     requires javafx.controls;
     requires javafx.fxml;
 
 
-    opens com.viikko7.naytto to javafx.fxml;
-    exports com.viikko7.naytto;
+    opens com.invader.naytto to javafx.fxml;
+    exports com.invader.naytto;
 }

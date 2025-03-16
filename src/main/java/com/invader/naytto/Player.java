@@ -1,4 +1,4 @@
-package com.viikko7.naytto;
+package com.invader.naytto;
 
 public class Player {
     boolean pause = false;
