@@ -1,36 +1,39 @@
 package com.invader.naytto;
 
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
+import javafx.scene.shape.Polygon;
 
-public class Defender extends Circle {
-    double size = 1;
-    Color color = Color.GREEN;
+public class Defender extends Ship{
+    private double x1;
+    private double x2;
+    private double x3;
+
+    private double y1;
+    private double y2;
+    private double y3;
+
+    Polygon graphic = new Polygon();
 
     public Defender(double xcord, double ycord){
-        Circle defender = new Circle(xcord, ycord, size);
-        Defender defender1 = (Defender) defender;
-        defender.setFill(color);
-        defender.setStrokeWidth(3*size);
-        defender.setStroke(Color.BLACK);
+        this.setCoordinates(xcord,ycord);
+        graphic.getPoints().setAll(x1,y1,x2,y2,x3,y3);
+        graphic.setFill(Color.DARKCYAN);
+        graphic.setStroke(Color.BLACK);
+        graphic.setStrokeWidth(2);
     }
 
-    public double[] getCoordinates(){
-        double x = this.getCenterX();
-        double y = this.getCenterY();
-        return new double[]{x,y};
-    }
+    public void update(){
+        double xcos = 2 * size * Math.cos(Math.PI / 3);
+        double ysin = size * Math.sin(Math.PI / 3);
 
-    public void setCoordinates(double x, double y){
-        this.setCenterY(y);
-        this.setCenterX(x);
-    }
+        x1 = xcord - xcos;
+        x2 = xcord;
+        x3 = xcord + xcos;
 
-    public double getSize() {
-        return size;
-    }
+        y1 = ycord + size;
+        y2 = ycord - ysin;
+        y3 = y1;
 
-    public void setSize(double size) {
-        this.size = size;
+        graphic.getPoints().setAll(x1,y1,x2,y2,x3,y3);
     }
 }
