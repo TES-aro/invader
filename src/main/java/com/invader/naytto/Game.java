@@ -2,21 +2,11 @@ package com.invader.naytto;
 
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
-import javafx.beans.binding.BooleanBinding;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.Scene;
-import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
-import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 
 public class Game extends Application{
-    final private double speed = 0.5;
-    private BooleanProperty leftPressed = new SimpleBooleanProperty();
-    private BooleanProperty rightPressed = new SimpleBooleanProperty();
-    private BooleanBinding keyPressed = leftPressed.or(rightPressed);
-
 
 
     public static void main(String[] args) {
@@ -25,56 +15,37 @@ public class Game extends Application{
 
     @Override
     public void start(Stage primaryStage) {
-
         Pane root = new Pane();
         root.setPrefSize(900,500);
         Scene scene = new Scene(root);
-        Invader invader = new Invader(100,100);
-        invader.setSize(50);
+
+        Defender defender = new Defender(100,100);
+        defender.setSize(50);
+        defender.update();
+        Controls controls = new Controls();
 
 
 
         AnimationTimer animationTimer = new AnimationTimer() {
             @Override
             public void handle(long l) {
-                if(leftPressed.get()){
-                    invader.setXcord(invader.getXcord()-speed);
-                }
-                if(rightPressed.get()){
-                    invader.setXcord(invader.getXcord()+speed);
-                }
-                if (invader.getXcord() > 900 -  invader.getSize()) {
-                    rightPressed.set(false);}
-                if (invader.getXcord() < invader.getSize()) {
-                    leftPressed.set(false);
-                }
+                if(controls.isLeftPressed()){
+                    defender.setXcord(defender.getXcord() - controls.getSpeed());
+                    defender.update();}
+                if(controls.isRightPressed()){
+                    defender.setXcord(defender.getXcord() + controls.getSpeed());
+                    defender.update();}
+                if (defender.getXcord() > 900 -  defender.getSize()) {
+                    controls.setRightPressed(false);}
+                if (defender.getXcord() < defender.getSize()) {
+                    controls.setLeftPressed(false);}
             }
         };
 
-        scene.setOnKeyReleased(e -> {
-            if(e.getCode() == KeyCode.LEFT){
-                leftPressed.set(false);
-            }
-            if(e.getCode() == KeyCode.RIGHT){
-                rightPressed.set(false);
-            }
-        });
+        controls.keyDown(scene, defender);
+        controls.fire(scene);
 
-        scene.setOnKeyPressed(e -> {
-            if(e.getCode() == KeyCode.LEFT) {
-                if (invader.getXcord() > invader.getSize()) {
-                    leftPressed.set(true);
-                }
-            }
-            if(e.getCode() == KeyCode.RIGHT) {
-                if (invader.getXcord() < 900 - invader.getSize()) {
-                    rightPressed.set(true);
-                }
-            }
-        });
-
-
-        keyPressed.addListener((((observableValue, aBoolean, t1) -> {
+        controls.keyPressed.addListener((((observableValue, aBoolean, t1) -> {
             if(!aBoolean){
                 animationTimer.start();
             } else {
@@ -82,7 +53,7 @@ public class Game extends Application{
             }
         })));
 
-        root.getChildren().addAll(invader);
+        root.getChildren().addAll(defender.graphic);
         primaryStage.setScene(scene);
         primaryStage.show();
     }
