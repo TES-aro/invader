@@ -5,12 +5,15 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
+import javafx.scene.shape.Shape;
 
 public class Controls{
-    double speed = 0.2;
+    double speed = 1;
     BooleanProperty leftPressed = new SimpleBooleanProperty();
     BooleanProperty rightPressed = new SimpleBooleanProperty();
+    BooleanProperty spacePress = new SimpleBooleanProperty();
     BooleanBinding keyPressed = leftPressed.or(rightPressed);
+
 
     public void setSpeed(double speed) {
         this.speed = speed;
@@ -21,6 +24,11 @@ public class Controls{
     }
 
     public Controls(){}
+
+    public void setSpacePress(boolean spacePress) {
+        this.spacePress.set(spacePress);
+    }
+
     public boolean isLeftPressed() {
         return leftPressed.get();
     }
@@ -37,34 +45,37 @@ public class Controls{
         this.rightPressed.set(rightPressed);
     }
 
-    public void keyDown(Scene scene, Ship controlTarget){
+    public void keyDown(Scene scene){
         scene.setOnKeyReleased(e -> {
-            if(e.getCode() == KeyCode.LEFT){
+            if(e.getCode() == KeyCode.LEFT || e.getCode() == KeyCode.A){
                 this.setLeftPressed(false);
             }
-            if(e.getCode() == KeyCode.RIGHT){
+            if(e.getCode() == KeyCode.RIGHT || e.getCode() == KeyCode.D){
                 this.setRightPressed(false);
+            }
+            if(e.getCode() == KeyCode.SPACE || e.getCode() == KeyCode.W || e.getCode() == KeyCode.UP){
+                setSpacePress(false);
             }
         });
         scene.setOnKeyPressed(e -> {
-            if(e.getCode() == KeyCode.LEFT) {
-                if (controlTarget.getXcord() > controlTarget.getSize()) {
-                    this.setLeftPressed(true);
-                }
+            if(e.getCode() == KeyCode.LEFT || e.getCode() == KeyCode.A) {
+                this.setLeftPressed(true);
             }
-            if(e.getCode() == KeyCode.RIGHT) {
-                if (controlTarget.getXcord() < 900 - controlTarget.getSize()) {
-                    this.setRightPressed(true);
-                }
+            if(e.getCode() == KeyCode.RIGHT || e.getCode() == KeyCode.D) {
+                this.setRightPressed(true);
+
+            }
+            if(e.getCode() == KeyCode.SPACE || e.getCode() == KeyCode.W || e.getCode() == KeyCode.UP){
+                spacePress.set(true);
             }
         });
     }
 
-    public void fire(Scene scene){
-        scene.setOnKeyPressed(e-> {
-            if(e.getCode() == KeyCode.SPACE){
-                System.out.println("FIRE!");
-            }
-        });
+    static boolean isColliding(Shape x, Shape y){
+        return x.getBoundsInParent().intersects(y.getBoundsInParent());
     }
+
+
+
+
 }

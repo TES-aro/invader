@@ -46,4 +46,5 @@ public class Player {
     public void setIngame(boolean ingame) {
         this.ingame = ingame;
     }
+
 }
