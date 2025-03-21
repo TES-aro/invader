@@ -1,5 +1,5 @@
 package com.invader.naytto;
 
-public interface fuck {
+public interface startStop {
     void start();
 }

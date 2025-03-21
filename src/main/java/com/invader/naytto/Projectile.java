@@ -8,7 +8,7 @@ import javafx.scene.shape.StrokeLineJoin;
 
 import java.util.ArrayList;
 
-public class Projectile implements fuck{
+public class Projectile implements graphic, startStop {
     private boolean rising = true;
     private boolean fired = false;
     double size = 50;

@@ -3,7 +3,7 @@ package com.invader.naytto;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Shape;
 
-public class Ship {
+public class Ship implements graphic{
     double size;
     double xcord;
     double ycord;

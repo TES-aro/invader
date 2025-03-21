@@ -9,10 +9,10 @@ import javafx.scene.shape.Shape;
 
 public class Controls{
     double speed = 1;
-    BooleanProperty leftPressed = new SimpleBooleanProperty();
-    BooleanProperty rightPressed = new SimpleBooleanProperty();
-    BooleanProperty spacePress = new SimpleBooleanProperty();
-    BooleanBinding keyPressed = leftPressed.or(rightPressed);
+    private final BooleanProperty leftPressed = new SimpleBooleanProperty();
+    private final BooleanProperty rightPressed = new SimpleBooleanProperty();
+    private final BooleanProperty spacePress = new SimpleBooleanProperty();
+    private final BooleanBinding keyPressed = leftPressed.or(rightPressed);
 
 
     public void setSpeed(double speed) {
@@ -21,6 +21,14 @@ public class Controls{
 
     public double getSpeed() {
         return speed;
+    }
+
+    public BooleanBinding keyDown() {
+        return keyPressed;
+    }
+
+    public BooleanProperty spaceDown(){
+        return spacePress;
     }
 
     public Controls(){}
