@@ -11,11 +11,18 @@ import java.util.TimerTask;
 
 public class Invader extends Ship{
     private Circle graphic = new Circle();
-    double speed = 0.1;
+    static double speed = 0.1;
     double startPosition;
+    int row;
+    boolean goingRight = true;
+    static boolean descend = false;
+    static int counter = 0;
 
 
-    public Invader(double xcord, double ycord, double size){
+
+
+    public Invader(double xcord, double ycord, double size, int row){
+        this.row = row;
         this.setCoordinates(xcord,ycord);
         setSize(size);
         graphic.setCenterX(xcord);
@@ -33,72 +40,58 @@ public class Invader extends Ship{
         graphic.setRadius(this.getSize());
         graphic.setFill(color);
     }
+public static void descend(Invader[] invaders){
+    counter++;
 
-    /*
-    public void animate(){
-        final Timeline timeline = new Timeline();
-        timeline.getKeyFrames().add(new KeyFrame(Duration.seconds(5),
-                new KeyValue(graphic.translateXProperty(), 500)));
-        timeline.setCycleCount(1);
-        timeline.play();
-    }
-    */
-    AnimationTimer descend = new AnimationTimer() {
-        @Override
-        public void handle(long l) {
-            if(ycord - startPosition > size*2){
-                stop();
-                sideways.start();
-            }
-            else{
-                ycord += speed*0.5;
-                update();
-            }
-
+    if(counter> 3000/speed) {
+        speed = speed* 1.2;
+        descend =true;
+        counter =0;
+        for(Invader invader :invaders){
+            invader.setStartPosition(invader.getYcord());
         }
-    };
-    AnimationTimer sideways = new AnimationTimer() {
-        boolean goingRight = true;
-
-        @Override
-        public void handle(long l) {
-            if (goingRight) {
-                if (xcord > 900 - 1.2 * size) {
-                    goingRight = false;
-                    stop();
-                    startPosition = ycord;
-                    descend.start();
+    }
+}
+    public void animation(Invader[] invaders){
+        if (!descend) {
+                if (goingRight) {
+                    if (xcord > 900 - 1.2 * size) {
+                        int turningRow = getRow();
+                        System.out.println(turningRow);
+                        for(Invader invader:invaders){
+                            if(invader.getRow()==turningRow){
+                                invader.goingRight = false;
+                            }
+                        }
+                    } else {
+                        xcord += speed;
+                        update();
+                    }
                 } else {
-                    xcord += speed;
+                    if (xcord < 1.2 * size) {
+                        int turningRow = getRow();
+                        for(Invader invader:invaders) {
+                            if (invader.getRow() == turningRow) {
+                                invader.goingRight = true;
+                            }
+                        }
+
+                    } else {
+                        xcord -= speed;
+                        update();
+                    }
+
+                }
+            } else{
+                if(ycord - startPosition > size*2){
+                    descend = false;}
+                else{
+                    ycord += speed*0.5;
                     update();
                 }
-            } else {
-                if (xcord < 1.2 * size) {
-                    goingRight = true;
-                    speed = 1.1*speed;
-                    startPosition = ycord;
-                    stop();
-                    descend.start();
-                } else {
-                    xcord -= speed;
-                    update();
-                }
-
             }
         }
-    };
-    public void animate() {
-        sideways.start();
-        double startSpeed = speed;
-        TimerTask timerTask = new TimerTask() {
-            @Override
-            public void run() {
-                speed += 0.0014*startSpeed;
-            }
-        };
-        Timer timer = new Timer();
-        timer.scheduleAtFixedRate(timerTask,10,10);
-    }
+
 
 
 
@@ -108,5 +101,33 @@ public class Invader extends Ship{
     }
     public Circle getGraphic() {
         return graphic;
+    }
+
+    public static void setCounter(int counter) {
+        Invader.counter = counter;
+    }
+
+    public static int getCounter() {
+        return counter;
+    }
+
+    public static void setDescend(boolean descend) {
+        Invader.descend = descend;
+    }
+
+    public void setStartPosition(double startPosition) {
+        this.startPosition = startPosition;
+    }
+
+    public static double getSpeed() {
+        return speed;
+    }
+
+    public static void setSpeed(double speed) {
+        Invader.speed = speed;
+    }
+
+    public int getRow() {
+        return row;
     }
 }
