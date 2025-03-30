@@ -40,22 +40,25 @@ public class Invader extends Ship{
         graphic.setRadius(this.getSize());
         graphic.setFill(color);
     }
-public static void descend(Invader[] invaders){
-    counter++;
 
-    if(counter> 3000/speed) {
-        speed = speed* 1.2;
-        descend =true;
-        counter =0;
-        for(Invader invader :invaders){
-            invader.setStartPosition(invader.getYcord());
+    public static void descend(Invader[] invaders){
+        counter++;
+
+        if(counter> 3000/speed) {
+            speed = speed* 1.2;
+            descend =true;
+            counter =0;
+            for(Invader invader :invaders){
+                invader.setStartPosition(invader.getYcord());
+            }
         }
     }
-}
+
+
     public void animation(Invader[] invaders){
         if (!descend) {
                 if (goingRight) {
-                    if (xcord > 900 - 1.2 * size) {
+                    if (xcord > 900 - 1.2 * size && getGraphic().isVisible()) {
                         int turningRow = getRow();
                         System.out.println(turningRow);
                         for(Invader invader:invaders){
@@ -68,7 +71,7 @@ public static void descend(Invader[] invaders){
                         update();
                     }
                 } else {
-                    if (xcord < 1.2 * size) {
+                    if (xcord < 1.2 * size && getGraphic().isVisible()) {
                         int turningRow = getRow();
                         for(Invader invader:invaders) {
                             if (invader.getRow() == turningRow) {

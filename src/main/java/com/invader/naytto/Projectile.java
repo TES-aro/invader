@@ -21,6 +21,7 @@ public class Projectile implements graphic, startStop {
     Ship source;
     private final Polygon graphic = new Polygon();
     ArrayList<Shape> targetList;
+    int score = 0;
 
 
     public Projectile(double xcord, double ycord, Ship[] target){
@@ -105,6 +106,10 @@ public class Projectile implements graphic, startStop {
     public double getYcord() {
         return ycord;}
 
+    public int getScore() {
+        return score;
+    }
+
     public void start(){
         graphic.setVisible(true);
         setFired(true);
@@ -125,6 +130,7 @@ public class Projectile implements graphic, startStop {
                         graphic.setVisible(false);
                         setFired(false);
                         setYcord(1000);
+                        score++;
                         stop();
                     }
                 }

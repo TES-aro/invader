@@ -1,18 +1,24 @@
 package com.invader.naytto;
 
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.Background;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
 public class UI {
     Scene scene;
-    Pane root;
-    double prefX=900;
-    double prefY=500;
+    Pane pane;
+    double prefX = 900;
+    double prefY = 500;
+    static Background background = Background.fill(new Color(0.1, 0.1, 0.2, 1));
 
-    private Pane getRoot() {
-        return root;
+    private Pane getPane() {
+        return pane;
     }
 
     public Scene getScene() {
@@ -27,17 +33,45 @@ public class UI {
         return prefY;
     }
 
-    public void setGraphics(graphic[] graphic){
-        for(graphic grap: graphic) getRoot().getChildren().add(grap.getGraphic());
-    }
-    public void setGraphics(graphic graphic){
-        getRoot().getChildren().add(graphic.getGraphic());
+    public void setGraphics(graphic[] graphic) {
+        for (graphic grap : graphic) getPane().getChildren().add(grap.getGraphic());
     }
 
-    public UI(){
-        root = new Pane();
-        root.setPrefSize(prefX,prefY);
-        root.setBackground(Background.fill(new Color(0.1,0.1,0.2,1)));
-        scene = new Scene(root);
+    public void setGraphics(graphic graphic) {
+        getPane().getChildren().add(graphic.getGraphic());
+    }
+
+    public void victory() {
+        Label win = new Label("VICTORY");
+        win.setLayoutX(getPrefX() / 2);
+        win.setLayoutY(getPrefY() / 2);
+        getPane().getChildren().add(win);
+    }
+
+
+    public void loss() {
+        Label win = new Label("YOU LOST!");
+        win.setLayoutX(getPrefX() / 2);
+        win.setLayoutY(getPrefY() / 2);
+        getPane().getChildren().add(win);
+    }
+
+    public void scoreScreen(Player[] scoreArray) {
+        VBox vbox = new VBox();
+        int rank = 0;
+        for(Player player:scoreArray){
+            rank++;
+            vbox.getChildren().add(new Label(String.valueOf(rank)+
+                    ".  " + player.getName() + "   " + String.valueOf(player.getScore())));
+        }
+        this.getPane().getChildren().add(vbox);
+    }
+
+
+    public UI() {
+        pane = new Pane();
+        pane.setPrefSize(prefX, prefY);
+        pane.setBackground(background);
+        scene = new Scene(pane);
     }
 }

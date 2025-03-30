@@ -2,22 +2,83 @@ package com.invader.naytto;
 
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
+import java.io.*;
 import java.util.ArrayList;
 
 public class Game extends Application{
     double prefX;
+    Player player = new Player();
 
-    private void test(startStop lol){
-        lol.start();
+    void writeHighscore(Player[] highscore){
+        try {
+            FileOutputStream fout = new FileOutputStream("highscore.ser");
+            ObjectOutputStream oos = new ObjectOutputStream(fout);
+            oos.writeObject(highscore);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+
+    }
+    Player[] readHighscore() {
+        Player[] highscore = new Player[10];
+        if (new File("highscore.ser").isFile()) {
+            try {
+                FileInputStream fis = new FileInputStream("highscore.ser");
+                ObjectInputStream ois = new ObjectInputStream(fis);
+                highscore = (Player[]) ois.readObject();
+                ois.close();
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+        else{
+            for(int i=0;i<10;i++){
+                highscore[i] = new Player();
+                highscore[i].setName("player"+String.valueOf(i));
+            }
+        }
+        return highscore;
+    }
+
+    void updateHighscore(Player newScore){
+        Player[] oldHighscore = readHighscore();
+        Player[] scoreArray = new Player[10];
+        int counter = 0;
+        boolean newHighscore = false;
+        for(Player player : oldHighscore){
+            if(newHighscore){
+                scoreArray[counter] = oldHighscore[counter-1];
+                counter++;
+                continue;
+            }
+            if(newScore.getScore()>player.getScore()){
+                newHighscore = true;
+                scoreArray[counter] = newScore;
+                counter++;
+            }
+            else{
+                scoreArray[counter] = player;
+                counter++;
+            }
+        }
+        writeHighscore(scoreArray);
     }
 
     Invader[] invaders(){
         ArrayList<Invader> invadersList = new ArrayList<>();
         for(int i=0;i<40;i++){
             double size = 20;
-            double x = 4*size*i+10*Math.sin(i);
+            double x = 4*size*i+10;
             int row = (int)(x / (prefX-2*size));
             x -= row* (prefX-size);
             double y = 3*size + 4*size*row;
@@ -52,31 +113,92 @@ public class Game extends Application{
         controls.keyDown().addListener((observableValue, aBoolean, t1) -> {
             if(!aBoolean){
                 defender.start();
-            } else {
+            }
+            else {
                 defender.stop();
             }
         });
         controls.spaceDown().addListener((observableValue, aBoolean, t1) -> {
             if(!aBoolean && !projectile.isFired()){
-                test(projectile);
+                projectile.start();
             }
         });
 
         AnimationTimer animationTimer = new AnimationTimer() {
             @Override
             public void handle(long l) {
+                boolean lost = false;
+                int count = 0;
                 Invader.descend(invaders);
                 for(Invader invader : invaders){
                     invader.animation(invaders);
+                    if(invader.getGraphic().isVisible()){
+                        count++;
+                    }
+                    if(invader.getGraphic().isVisible() &&
+                            invader.getYcord() >= defender.getYcord() - 4*defender.getSize()){
+                        stop();
+                        lost = true;
+                    }
+                }
+                if(count == 0){
+                    ui.victory();
+                    stop();
+                    player.setScore(projectile.getScore()*400);
+                    updateHighscore(player);
+                    UI winScreen = new UI();
+                    winScreen.scoreScreen(readHighscore());
+                    primaryStage.setScene(winScreen.getScene());
+                }
+                if(lost){
+                    player.setScore(projectile.getScore()*300);
+                    updateHighscore(player);
+                    UI lossScreen = new UI();
+                    lossScreen.scoreScreen(readHighscore());
+                    primaryStage.setScene(lossScreen.getScene());
                 }
             }
         };
-        animationTimer.start();
 
+
+        Player player = new Player();
+        //en jaksa, todella ruma.
+        StackPane namePane = new StackPane();
+        namePane.setPrefSize(ui.getPrefX(),ui.getPrefY());
+        namePane.setBackground(UI.background);
+        HBox hbox = getHBox(primaryStage, ui, player,animationTimer);
+        hbox.setAlignment(Pos.CENTER);
+        hbox.setSpacing(10);
+
+        namePane.getChildren().add(hbox);
+        Scene giveName = new Scene(namePane);
+        primaryStage.setScene(giveName);
+        animationTimer.start();
 
         ui.setGraphics(new graphic[]{defender,projectile});
         ui.setGraphics(invaders);
-        primaryStage.setScene(ui.getScene());
         primaryStage.show();
+    }
+
+    // todella ruma tapa, mutta väsyttää. pitäisi oikeasti tehdä UI (ala)luokkaan tai jotain.
+    private static HBox getHBox(Stage primaryStage, UI ui, Player player, AnimationTimer at) {
+        TextField textField = new TextField();
+        Button button = new Button("CONTINUE");
+        button.setOnAction(e -> {
+            primaryStage.setScene(ui.getScene());
+            at.start();
+            if(textField.getText().isEmpty()){
+                player.setName("ANON");
+            }
+            else{
+                if(textField.getText().length() > 10){
+                    player.setName(textField.getText().substring(0,10));
+                }
+                else{
+                    player.setName(textField.getText());
+                }
+            }
+        });
+        return new HBox(textField,button);
     }
 }

@@ -49,6 +49,7 @@ public class Defender extends Ship{
         graphic.getPoints().setAll(x1,y1,x2,y2,x3,y1);
     }
 
+    
     private AnimationTimer animationTimer = new AnimationTimer() {
         @Override
         public void handle(long l) {
