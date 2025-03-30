@@ -1,19 +1,11 @@
 package com.invader.naytto;
 
-public class Player {
-    boolean pause = false;
-    boolean ingame = false;
-    int score;
+import java.io.Serializable;
+
+public class Player implements Serializable {
+    int score = 0;
     int lives;
-    String name;
-
-    public void setPause(boolean pause) {
-        this.pause = pause;
-    }
-
-    public int getLives() {
-        return lives;
-    }
+    String name = "";
 
     public void setName(String name) {
         this.name = name;
@@ -31,19 +23,4 @@ public class Player {
         this.score = score;
     }
 
-    public void setLives(int lives) {
-        this.lives = lives;
-    }
-
-    public boolean isIngame() {
-        return ingame;
-    }
-
-    public boolean isPause() {
-        return pause;
-    }
-
-    public void setIngame(boolean ingame) {
-        this.ingame = ingame;
-    }
 }

@@ -1,12 +1,22 @@
 package com.invader.naytto;
 
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Shape;
 
-public class Ship {
+public class Ship implements graphic{
     double size;
     double xcord;
     double ycord;
     Color color = Color.PINK;
+    Shape graphic;
+
+    public Shape getGraphic() {
+        return graphic;
+    }
+
+    public void setColor(Color color) {
+        this.color = color;
+    }
 
     public double getYcord() {
         return ycord;
