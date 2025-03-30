@@ -1,5 +1,6 @@
 package com.invader.naytto;
 
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -9,6 +10,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 
 public class UI {
     Scene scene;
@@ -61,9 +63,13 @@ public class UI {
         int rank = 0;
         for(Player player:scoreArray){
             rank++;
-            vbox.getChildren().add(new Label(String.valueOf(rank)+
-                    ".  " + player.getName() + "   " + String.valueOf(player.getScore())));
+            Label label = new Label(String.valueOf(rank)+ ".  "
+                    + player.getName() + "   " + String.valueOf(player.getScore()));
+            label.setTextFill(Color.WHITE);
+            label.setFont(new Font(35));
+            vbox.getChildren().add(label);
         }
+        vbox.setSpacing(5);
         this.getPane().getChildren().add(vbox);
     }
 

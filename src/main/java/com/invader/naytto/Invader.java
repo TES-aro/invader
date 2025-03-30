@@ -60,7 +60,6 @@ public class Invader extends Ship{
                 if (goingRight) {
                     if (xcord > 900 - 1.2 * size && getGraphic().isVisible()) {
                         int turningRow = getRow();
-                        System.out.println(turningRow);
                         for(Invader invader:invaders){
                             if(invader.getRow()==turningRow){
                                 invader.goingRight = false;

@@ -6,7 +6,6 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
@@ -44,7 +43,7 @@ public class Game extends Application{
         else{
             for(int i=0;i<10;i++){
                 highscore[i] = new Player();
-                highscore[i].setName("player"+String.valueOf(i));
+                highscore[i].setName("bot"+String.valueOf(i));
             }
         }
         return highscore;
@@ -76,13 +75,23 @@ public class Game extends Application{
 
     Invader[] invaders(){
         ArrayList<Invader> invadersList = new ArrayList<>();
+        double size = 20;
+        double sideBuffer = 8*size;
+        double x = 10+size;
+        int row = 0;
+
         for(int i=0;i<40;i++){
-            double size = 20;
-            double x = 4*size*i+10;
-            int row = (int)(x / (prefX-2*size));
-            x -= row* (prefX-size);
+            x += 3*size;
             double y = 3*size + 4*size*row;
             invadersList.add(new Invader(x,y,size,row));
+            if(row%2==0 && x >= prefX-sideBuffer-10-size){
+                row++;
+                x = size+10+sideBuffer;
+            }
+            if(row%2==1 && x >= prefX-10-size){
+                row++;
+                x = 10+size;
+            }
         }
         Invader[] invaders = new Invader[invadersList.size()];
         invaders = invadersList.toArray(invaders);
